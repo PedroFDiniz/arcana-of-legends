@@ -1,6 +1,6 @@
 {
   "name": "just-another-rpg-game",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A backend server supporting an online RPG game",
   "main": "index.js",
   "scripts": {
