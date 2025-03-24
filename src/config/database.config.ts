@@ -20,7 +20,7 @@ export default async () => {
         }
     })();
 
-    /* Set database up */
+    /* This sets the database up */
     mongoose.connection.on('error', (error) => {
         log("Error while connecting to the Database.");
     });

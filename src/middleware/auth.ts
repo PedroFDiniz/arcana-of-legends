@@ -49,7 +49,7 @@ const authorize = async (
 
 const isAdmin = (user: any) => ["admin"].includes(user.accessLevel);
 const isBanned = (user: any) => ["banned"].includes(user.accessLevel);
-const matchIDs = (user: any, request: any) => 
+const matchIDs = (user: any, request: any) =>
     user._id.toString() === request.params.id;
 
 export { isSelfOrAdmin, hasAdminRights };

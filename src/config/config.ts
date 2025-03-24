@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import { log } from '../utils/misc';
 
 export default async () => {
-    /* Import and check environment variables */
+    /* This imports and checks environment variables */
     dotenv.config();
     const REQUIRED_ENV_VARIABLES = [
         'NODE_ENV',

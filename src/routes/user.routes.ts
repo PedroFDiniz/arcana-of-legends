@@ -1,5 +1,9 @@
 import express from "express";
 import {
+    validateCreation,
+    validateUpdate,
+} from "../middleware/user.validation";
+import {
     create,
     destroy,
     destroyMany,
@@ -14,11 +18,11 @@ import {
 
 const router = express.Router();
 
-router.post(`/user/`, create);
-router.get(`/user/:id`, isSelfOrAdmin, read);
-router.patch(`/user/:id`, isSelfOrAdmin, update);
-router.delete(`/user/:id`, isSelfOrAdmin, destroy);
-router.get(`/users`, hasAdminRights, readAll);
-router.post(`/users/delete`, hasAdminRights, destroyMany);
+router.post     (`/user/`, validateCreation, create);
+router.get      (`/user/:id`, isSelfOrAdmin, read);
+router.patch    (`/user/:id`, isSelfOrAdmin, validateUpdate, update);
+router.delete   (`/user/:id`, isSelfOrAdmin, destroy);
+router.get      (`/users`, hasAdminRights, readAll);
+router.post     (`/users/delete`, hasAdminRights, destroyMany);
 
 export default router;
