@@ -1,0 +1,35 @@
+{
+  "name": "just-another-rpg-game",
+  "version": "0.0.3",
+  "description": "A backend server supporting an online RPG game",
+  "main": "index.js",
+  "scripts": {
+    "start": "set NODE_ENV=dev && npx tsc && node ./dist/index.js",
+    "deploy:build": "npx tsc",
+    "deploy:run": "node ./dist/index.js"
+  },
+  "author": "Pedro Falcão",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/body-parser": "^1.19.5",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/node": "^22.13.11",
+    "@types/nodemailer": "^6.4.17",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^2.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb-memory-server": "^10.1.4",
+    "mongoose": "^8.12.2",
+    "nodemailer": "^6.10.0",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "just-another-rpg-game": "file:"
+  }
+}
