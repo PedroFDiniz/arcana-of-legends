@@ -9,7 +9,7 @@ const confirmEmail = async (address: string, id: string) => {
         to: address,
         subject: "Arcana of Legends - Confirmation Email",
         text: "This is an auto-generated message. Do not reply.\n" +
-            "You can validate your account by entering the link below:\n" +
+            "You can validate your account by following the link below:\n" +
             `${base_address}${EMAIL_CONF_ENDPOINT.replace(":key",id)}`,
     };
 

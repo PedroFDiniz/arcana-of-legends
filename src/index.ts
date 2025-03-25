@@ -1,7 +1,7 @@
-import config from './config/config';
-import configDB from './config/database.config';
-import server from './server';
-import { log } from './utils/misc';
+import config from "./config/config";
+import configDB from "./config/database.config";
+import server from "./server";
+import { log } from "./utils/misc";
 
 /* Check variables and start databases */
 config();

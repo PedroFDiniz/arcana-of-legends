@@ -1,17 +1,17 @@
-import dotenv from 'dotenv';
-import { log } from '../utils/misc';
+import dotenv from "dotenv";
+import { log } from "../utils/misc";
 
 export default async () => {
     /* This imports and checks environment variables */
     dotenv.config();
     const REQUIRED_ENV_VARIABLES = [
-        'NODE_ENV',
-        'DB_DEV',
-        'DB_PROD',
-        'PORT',
-        'SALT_ROUNDS',
-        'JWT_SECRET',
-        'BASE_ADDRESS',
+        "NODE_ENV",
+        "DB_DEV",
+        "DB_PROD",
+        "PORT",
+        "SALT_ROUNDS",
+        "JWT_SECRET",
+        "BASE_ADDRESS",
     ];
 
     for (let variable of REQUIRED_ENV_VARIABLES) {
