@@ -3,7 +3,7 @@ import { log } from '../utils/misc';
 import { base_address } from '../config/config';
 import { EMAIL_CONF_ENDPOINT } from '../utils/constants';
 
-const confirmEmail = async (address: string, id: string) => {
+const sendConfirmation = async (address: string, id: string) => {
     const message = {
         from: "no-reply@test.com",
         to: address,
@@ -33,5 +33,5 @@ const confirmEmail = async (address: string, id: string) => {
 }
 
 export default {
-    confirmEmail
+    sendConfirmation
 }

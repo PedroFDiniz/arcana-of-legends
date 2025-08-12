@@ -2,7 +2,7 @@ import cors from "cors";
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
 import emailRoutes from "./routes/email.routes";
-import express from "express";
+import express, { Request } from "express";
 import bodyParser from "body-parser";
 
 const server = express();
@@ -18,7 +18,7 @@ server.use(emailRoutes);
 
 server.use(bodyParser.urlencoded({ extended: false }));
 server.use(bodyParser.json());
-server.get("/api", (request: any, response: any) => {
+server.get("/api", (request: Request, response: any) => {
     return response.send({ message: "API online!" });
 });
 

@@ -1,10 +1,28 @@
 import mongoose, { model } from "mongoose";
 const { Schema } = mongoose;
 
-const userSchema = new Schema({
+interface IUser {
+    _id: string,
+    username: string;
+    email: string;
+    password: string;
+    accessLevel: string;
+    confirmationCode: number;
+    emailConfirmed: boolean;
+}
+
+const userSchema = new Schema<IUser>({
+    username: {
+        type: String,
+        required: [true, "The username field is required"],
+        unique: true,
+        match: [/^[a-zA-Z](([ ]|[.]|[-])?[\w])*$/, "Invalid username format"],
+        min: [3, "Username cannot be smaller than 3 alphanumeric characters"],
+        max: [50, "Username cannot be bigger than 50 alphanumeric characters"],
+    },
     email: {
         type: String,
-        required: [true, "An email is required"],
+        required: [true, "The email field is required"],
         match: [/^\S+@\w+([.-]?\w+)(.\w{2,3})+$/, "Invalid email format"],
         lowercase: true,
         unique: [true, "That email address is already present in our database"],
@@ -17,16 +35,21 @@ const userSchema = new Schema({
     },
     accessLevel: {
         type: String,
-        enum: ["admin", "player", "banned"],
+        enum: ["admin", "moderator", "player", "banned"],
         default: "player",
+    },
+    confirmationCode: {
+        type: Number,
+        required: true,
     },
     emailConfirmed: {
         type: Boolean,
         default: false,
-    }
+    },
 });
 
 userSchema.pre("save", (next) => {
     next();
 });
 export default model("User", userSchema, "users");
+export { IUser };

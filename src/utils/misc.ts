@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import { salt_rounds } from "../config/config";
+import { Response } from "express";
 
 const encrypt = async (word: string) => {
     return await bcrypt.hash(word, parseInt(salt_rounds));
@@ -14,14 +15,14 @@ const log = (message: string) => {
     console.log(`[${(new Date()).toLocaleString('en-US')}]: ${message}`);
 }
 
-const failed = (response: any, status: number, message: string) => {
+const failed = (response: Response, status: number, message: string) => {
     log(`Error ${status}: ${message}`);
     return response
         .status(status).send({ message: message });
 }
 
 const succeeded = (
-    response: any,
+    response: Response,
     status: number,
     message: string,
     result: any = undefined) => {
