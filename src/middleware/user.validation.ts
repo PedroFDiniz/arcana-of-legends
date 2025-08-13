@@ -3,7 +3,7 @@ import { failed } from "../utils/misc";
 import { encrypt } from "../utils/misc";
 import { user as isValid } from "../utils/validation";
 
-async function validateCreation(request: Request, response: Response, next: NextFunction) {
+async function validateCreation(request: Request, response: Response, next: NextFunction): Promise<any> {
     const { email, password } = request.body;
     if (!email || !isValid.email(email))
         return failed(response, 400, `Invalid email format: ${email}`);
@@ -13,7 +13,7 @@ async function validateCreation(request: Request, response: Response, next: Next
     return next();
 };
 
-const validateUpdate = async (request: Request, response: Response, next: NextFunction) => {
+const validateUpdate = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
     const { email, password } = request.body;
 
     if (!email && !password)

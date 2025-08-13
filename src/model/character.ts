@@ -1,16 +1,20 @@
-import mongoose, { model } from "mongoose";
-const { Schema } = mongoose;
+import { model, Schema } from "mongoose";
+
+type ID = Schema.Types.ObjectId;
 
 interface IDynamicStatistic {
     current: number;
     maximum: number;
 }
 interface ICharacter {
+    _id: ID;
     name: string;
     level: number;
     health: IDynamicStatistic;
     mana: IDynamicStatistic;
     experience: IDynamicStatistic;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 const dynStatSchema = new Schema({
@@ -38,12 +42,22 @@ const charSchema = new Schema<ICharacter>({
         min: [1, "The minimum level of a character must be 1"],
         max: [60, "The maximum level of a character must be 60"],
     },
-    health: dynStatSchema,
-    mana: dynStatSchema,
-    experience: dynStatSchema,
+    health: {
+        type: dynStatSchema,
+        required: true,
+    },
+    mana: {
+        type: dynStatSchema,
+        required: true,
+    },
+    experience: {
+        type: dynStatSchema,
+        required: true,
+    },
+    createdAt: {
+
+    }
 });
 
-charSchema.pre("save", (next) => {
-    next();
-});
 export default model("Character", charSchema, "characters");
+export { ICharacter };

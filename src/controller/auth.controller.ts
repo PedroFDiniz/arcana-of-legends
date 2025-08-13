@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import service from "../service/auth.service";
 import { failed, succeeded } from "../utils/misc";
 
-export async function signIn(request: Request, response: Response) {
+export async function signIn(request: Request, response: Response): Promise<any> {
     try {
         const { email, password } = request.body;
         const result = await service.signIn(email, password);

@@ -1,14 +1,17 @@
-import mongoose, { model } from "mongoose";
-const { Schema } = mongoose;
+import { model, Schema } from "mongoose";
+
+type ID = Schema.Types.ObjectId;
 
 interface IUser {
-    _id: string,
+    _id: ID;
     username: string;
     email: string;
     password: string;
     accessLevel: string;
     confirmationCode: number;
     emailConfirmed: boolean;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 const userSchema = new Schema<IUser>({
@@ -46,10 +49,14 @@ const userSchema = new Schema<IUser>({
         type: Boolean,
         default: false,
     },
+    createdAt: {
+        type: Date,
+        required: true,
+    },
+    updatedAt: {
+        type: Date,
+    },
 });
 
-userSchema.pre("save", (next) => {
-    next();
-});
 export default model("User", userSchema, "users");
 export { IUser };

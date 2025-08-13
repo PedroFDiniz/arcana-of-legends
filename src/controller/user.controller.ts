@@ -3,7 +3,7 @@ import service from "../service/user.service";
 import emailService from "../service/email.service";
 import { log, failed, succeeded } from "../utils/misc";
 
-const confirmEmail = async (request: Request, response: Response) => {
+const confirmEmail = async (request: Request, response: Response): Promise<any> => {
     const { key } = request.params;
 
     try {
@@ -18,7 +18,7 @@ const confirmEmail = async (request: Request, response: Response) => {
     }
 };
 
-const create = async (request: Request, response: Response) => {
+const create = async (request: Request, response: Response): Promise<any> => {
     const { email, password } = request.body;
     log(`Request to create user ${email}.`);
 
@@ -39,7 +39,7 @@ const create = async (request: Request, response: Response) => {
     }
 };
 
-const read = async (request: Request, response: Response) => {
+const read = async (request: Request, response: Response): Promise<any> => {
     const { id } = request.body;
 
     try {
@@ -51,7 +51,7 @@ const read = async (request: Request, response: Response) => {
     }
 };
 
-const readAll = async (request: Request, response: Response) => {
+const readAll = async (request: Request, response: Response): Promise<any> => {
     try {
         const users = await service.readAll();
         return succeeded(response, 200, `${users.length} user(s) read.`);
@@ -60,7 +60,7 @@ const readAll = async (request: Request, response: Response) => {
     }
 };
 
-const update = async (request: Request, response: Response) => {
+const update = async (request: Request, response: Response): Promise<any> => {
     const { id } = request.params;
     const { email, password } = request.body;
 
@@ -73,7 +73,7 @@ const update = async (request: Request, response: Response) => {
     }
 };
 
-const destroy = async (request: Request, response: Response) => {
+const destroy = async (request: Request, response: Response): Promise<any> => {
     const { id } = request.params;
     try {
         const result = await service.destroy(id);
@@ -84,7 +84,7 @@ const destroy = async (request: Request, response: Response) => {
     }
 };
 
-const destroyMany = async (request: Request, response: Response) => {
+const destroyMany = async (request: Request, response: Response): Promise<any> => {
     const { emails } = request.body;
     try {
         const result = await service.destroyMany(emails);
