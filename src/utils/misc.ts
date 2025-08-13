@@ -2,6 +2,8 @@ import bcrypt from "bcrypt";
 import { salt_rounds } from "../config/config";
 import { Response } from "express";
 
+const WHITESPACE_PATTERN = /\s+g/;
+
 const encrypt = async (word: string) => {
     return await bcrypt.hash(word, parseInt(salt_rounds));
 }
@@ -33,4 +35,14 @@ const succeeded = (
             .status(status).send({ message: message, result: result });
 }
 
-export { log, encrypt, compareEncrypted, failed, succeeded };
+const filterWhitespace = (sentence: string) => {
+    return sentence.replace(WHITESPACE_PATTERN, " ").trim().split(" ");
+};
+
+export {
+    compareEncrypted,
+    encrypt,
+    failed,
+    log,
+    succeeded,
+};

@@ -94,4 +94,12 @@ const destroyMany = async (request: Request, response: Response): Promise<any> =
     }
 };
 
-export { confirmEmail, create, read, readAll, update, destroy, destroyMany }
+export {
+    confirmEmail,
+    create,
+    read,
+    readAll,
+    update,
+    destroy,
+    destroyMany
+};

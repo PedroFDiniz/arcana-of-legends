@@ -60,4 +60,7 @@ const isModerator = (user: any) => ["moderator"].includes(user.accessLevel);
 const matchIDs = (user: any, request: Request) =>
     user._id.toString() === request.params.id;
 
-export { isSelfOrAdmin, hasAdminRights };
+export {
+    isSelfOrAdmin,
+    hasAdminRights,
+};

@@ -30,4 +30,6 @@ const signIn = async (email: string, password: string) => {
     return result;
 }
 
-export default { signIn };
+export default {
+    signIn,
+};

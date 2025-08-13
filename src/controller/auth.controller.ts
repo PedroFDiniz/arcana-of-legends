@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import service from "../service/auth.service";
 import { failed, succeeded } from "../utils/misc";
 
-export async function signIn(request: Request, response: Response): Promise<any> {
+async function signIn(request: Request, response: Response): Promise<any> {
     try {
         const { email, password } = request.body;
         const result = await service.signIn(email, password);
@@ -15,3 +15,7 @@ export async function signIn(request: Request, response: Response): Promise<any>
         return failed(response, 500, "Unknown error");
     }
 }
+
+export {
+    signIn,
+};

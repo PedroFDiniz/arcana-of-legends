@@ -1,5 +1,19 @@
 import Users from "../model/user";
 
+const destroy = async (id: string) => {
+    return await Users.deleteOne({
+        _id: id,
+    });
+}
+
+const destroyMany = async (emails: string[]) => {
+    return await Users.deleteMany({
+        email: {
+            $in: emails,
+        }
+    });
+}
+
 const has = async (email: string) => {
     return await Users.exists({ email });
 }
@@ -33,48 +47,34 @@ const readByEmail = async (email: string) => {
 }
 
 const update = async (id: string, email: string, password: string) => {
-        const emailExists = await has(email);
-        if (emailExists) throw new Error("That email is already in use");
+    const emailExists = await has(email);
+    if (emailExists) throw new Error("That email is already in use");
 
-        const changes: any = { };
-        email && (changes.email = email);
-        password && (changes.password = password);
-        const old: any = await Users.findOneAndUpdate({ _id: id }, changes);
+    const changes: any = { };
+    email && (changes.email = email);
+    password && (changes.password = password);
+    const old: any = await Users.findOneAndUpdate({ _id: id }, changes);
 
-        const result: any = { };
-        for (const [property, value] of Object.entries(changes)) {
-            result[property] = {
-                old: old[property],
-                new: value,
-            }
+    const result: any = { };
+    for (const [property, value] of Object.entries(changes)) {
+        result[property] = {
+            old: old[property],
+            new: value,
         }
+    }
 
-        return result;
-}
-
-const destroy = async (id: string) => {
-    return await Users.deleteOne({
-        _id: id,
-    })
-}
-
-const destroyMany = async (emails: string[]) => {
-    return await Users.deleteMany({
-        email: {
-            $in: emails,
-        }
-    });
+    return result;
 }
 
 export default {
-    has,
-    exists,
     confirmEmail,
     create,
+    destroy,
+    destroyMany,
+    exists,
+    has,
     read,
     readAll,
     readByEmail,
     update,
-    destroy,
-    destroyMany,
-}
+};

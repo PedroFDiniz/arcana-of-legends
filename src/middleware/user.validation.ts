@@ -28,4 +28,7 @@ const validateUpdate = async (request: Request, response: Response, next: NextFu
     return next();
 };
 
-export { validateCreation, validateUpdate }
+export {
+    validateCreation,
+    validateUpdate
+};
