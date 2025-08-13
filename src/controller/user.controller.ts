@@ -1,22 +1,7 @@
 import { Request, Response } from "express";
 import service from "../service/user.service";
-import emailService from "../service/email.service";
 import { log, failed, succeeded } from "../utils/misc";
 
-async function confirmEmail(request: Request, response: Response): Promise<any> {
-    const { key } = request.params;
-
-    try {
-        const user = await service.read(key);
-        const confirmed = user?.emailConfirmed;
-        if (!user) return failed(response, 404, `User not found`);
-        if (confirmed) return failed(response, 400, `User email already validated`);
-        await service.confirmEmail(key);
-        return succeeded(response, 200, "Email confirmed");
-    } catch (error: any) {
-        return failed(response, 500, error.message);
-    }
-};
 
 async function create(request: Request, response: Response): Promise<any> {
     const { email, password } = request.body;
@@ -32,7 +17,6 @@ async function create(request: Request, response: Response): Promise<any> {
             id: user._id,
             email: user.email,
         };
-        emailService.sendConfirmation(user.email, user._id.toString());
         return succeeded(response, 200, `User ${user.email} created`, data);
     } catch(error: any) {
         return failed(response, 400, error.message);
@@ -95,7 +79,6 @@ async function destroyMany(request: Request, response: Response): Promise<any> {
 };
 
 export {
-    confirmEmail,
     create,
     read,
     readAll,
