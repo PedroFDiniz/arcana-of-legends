@@ -34,5 +34,10 @@
     "mongoose": "8.17.1",
     "nodemailer": "^7.0.5",
     "typescript": "5.9.2"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E  HUSKY_GIT_PARAMS"
+    }
   }
 }
