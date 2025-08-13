@@ -1,73 +1,102 @@
-import Users from "../model/user";
+import { DeleteResult } from "mongoose";
+import Users, { IUser } from "../model/user";
 
-async function destroy(id: string) {
-    return await Users.deleteOne({
-        _id: id,
+const USER_STANDARD_PROPS = "_id username email accessLevel";
+const USER_LOGIN_PROPS = "_id username email password accessLevel";
+const LANGUAGE = "pt-BR";
+
+type usernameOrEmail = string;
+
+export type userCreateProps = {
+    username: string;
+    email: string;
+    password: string;
+};
+
+export type userUpdateProps = {
+    username?: string;
+    email?: string;
+    password?: string;
+};
+
+async function create(properties: userCreateProps): Promise<IUser> {
+    const newUser = new Users({
+        username: properties.username,
+        email: properties.email,
+        password: properties.password,
+        createdAt: new Date().toLocaleString(LANGUAGE),
     });
+    return newUser.save();
 }
 
-async function destroyMany(emails: string[]) {
-    return await Users.deleteMany({
+async function destroy(id: string): Promise<DeleteResult> {
+    const user = Users.findById(id);
+    return user.deleteOne().exec();
+}
+
+async function destroyMany(emails: string[]): Promise<DeleteResult> {
+    const users = Users.find({
         email: {
             $in: emails,
-        }
+        },
     });
+    return users.deleteMany().exec();
 }
 
-async function has(email: string) {
-    return await Users.exists({ email });
+async function exists(id: string): Promise<boolean> {
+    const exists = Users.exists({ _id: id });
+    return (!!exists.exec());
 }
 
-async function exists(id: string) {
-    return await Users.exists({ _id: id });
-}
-
-async function confirmEmail(id: string) {
-    const result = await Users.findByIdAndUpdate(id, { emailConfirmed: true });
+async function has(email: string): Promise<boolean> {
+    const exists = Users.exists({ email });
+    const result = (!!exists.exec());
     return result;
 }
 
-async function create(email: string, password: string) {
-    return await Users.create({
-        email,
-        password,
+async function getLoginInfo
+(credentials: usernameOrEmail, password: string): Promise<IUser | null> {
+    const user = Users.findOne({
+        $or: [
+            { username: credentials },
+            { email: credentials },
+        ],
     });
+    user.select(USER_LOGIN_PROPS);
+    return user.exec();
 }
 
-async function read(id: string) {
-    return await Users.findOne({ _id: id });
+async function read(id: string): Promise<IUser | null> {
+    const user = Users.findOne({ _id: id });
+    user.select(USER_STANDARD_PROPS);
+    return user.exec();
 }
 
-async function readAll() {
-    return await Users.find().select("-password");
+async function readAll(): Promise<IUser[]> {
+    const users =  Users.find();
+    users.select(USER_STANDARD_PROPS);
+    return users.exec();
 }
 
-async function readByEmail(email: string) {
-    return await Users.findOne({ email: email });
+async function readByEmail(email: string): Promise<IUser | null> {
+    const user = Users.findOne({
+        email
+    });
+    user.select(USER_STANDARD_PROPS);
+    return user.exec();
 }
 
-async function update(id: string, email: string, password: string) {
-    const emailExists = await has(email);
-    if (emailExists) throw new Error("That email is already in use");
-
-    const changes: any = { };
-    email && (changes.email = email);
-    password && (changes.password = password);
-    const old: any = await Users.findOneAndUpdate({ _id: id }, changes);
-
-    const result: any = { };
-    for (const [property, value] of Object.entries(changes)) {
-        result[property] = {
-            old: old[property],
-            new: value,
-        }
-    }
-
-    return result;
+async function update
+(id: string, properties: userUpdateProps): Promise<IUser | null> {
+    const user = Users.findOne({ _id: id })
+    user.select("_id username email password");
+    if (properties.username) user.set("username", properties.username);
+    if (properties.email) user.set("email", properties.email);
+    if (properties.password) user.set("password", properties.password);
+    return user.exec();
 }
 
 export default {
-    confirmEmail,
     create,
     destroy,
     destroyMany,
