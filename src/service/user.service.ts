@@ -1,12 +1,12 @@
 import Users from "../model/user";
 
-const destroy = async (id: string) => {
+async function destroy(id: string) {
     return await Users.deleteOne({
         _id: id,
     });
 }
 
-const destroyMany = async (emails: string[]) => {
+async function destroyMany(emails: string[]) {
     return await Users.deleteMany({
         email: {
             $in: emails,
@@ -14,39 +14,39 @@ const destroyMany = async (emails: string[]) => {
     });
 }
 
-const has = async (email: string) => {
+async function has(email: string) {
     return await Users.exists({ email });
 }
 
-const exists = async (id: string) => {
+async function exists(id: string) {
     return await Users.exists({ _id: id });
 }
 
-const confirmEmail = async (id: string) => {
+async function confirmEmail(id: string) {
     const result = await Users.findByIdAndUpdate(id, { emailConfirmed: true });
     return result;
 }
 
-const create = async (email: string, password: string) => {
+async function create(email: string, password: string) {
     return await Users.create({
         email,
         password,
     });
 }
 
-const read = async (id: string) => {
+async function read(id: string) {
     return await Users.findOne({ _id: id });
 }
 
-const readAll = async () => {
+async function readAll() {
     return await Users.find().select("-password");
 }
 
-const readByEmail = async (email: string) => {
+async function readByEmail(email: string) {
     return await Users.findOne({ email: email });
 }
 
-const update = async (id: string, email: string, password: string) => {
+async function update(id: string, email: string, password: string) {
     const emailExists = await has(email);
     if (emailExists) throw new Error("That email is already in use");
 

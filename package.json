@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "set NODE_ENV=dev && npx tsc && node ./dist/index.js",
-    "deploy:build": "npx tsc",
+    "start:linux": "NODE_ENV=dev && npx tsc && node ./dist/index.js",
+    "deploy:build": "npm i . && npx tsc",
     "deploy:run": "node ./dist/index.js"
   },
   "author": "Pedro Falcão",

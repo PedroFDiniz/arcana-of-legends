@@ -13,7 +13,7 @@ async function validateCreation(request: Request, response: Response, next: Next
     return next();
 };
 
-const validateUpdate = async (request: Request, response: Response, next: NextFunction): Promise<any> => {
+async function validateUpdate(request: Request, response: Response, next: NextFunction): Promise<any> {
     const { email, password } = request.body;
 
     if (!email && !password)

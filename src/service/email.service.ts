@@ -1,15 +1,15 @@
 import mailer from 'nodemailer';
 import { log } from '../utils/misc';
-import { base_address } from '../config/config';
+const BASE_ADDRESS = process.env.BASE_ADDRESS!;
 
-const sendConfirmation = async (address: string, id: string) => {
+async function sendConfirmation (address: string, id: string) {
     const message = {
         from: "no-reply@test.com",
         to: address,
         subject: "Arcana of Legends - Confirmation Email",
         text: "This is an auto-generated message. Do not reply.\n" +
             "You can validate your account by following the link below:\n" +
-            `${base_address}${`/confirm/:key`.replace(":key", id)}`,
+            `${BASE_ADDRESS}${`/confirm/:key`.replace(":key", id)}`,
     };
 
     try {

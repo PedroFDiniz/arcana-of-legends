@@ -1,23 +1,25 @@
 import JWT from "jsonwebtoken";
 import service from "../service/user.service";
-import { jwt_secret } from "../config/config";
 import { failed } from "../utils/misc";
 import { NextFunction, Request, Response } from "express";
 import { IUser } from "../model/user";
+const JWT_SECRET = process.env.JWT_SECRET!;
 
-const isSelfOrAdmin = async (request: Request, response: Response, next: NextFunction) => {
+async function isSelfOrAdmin
+(request: Request, response: Response, next: NextFunction) {
     authorize(request, response, next, "authorized");
 }
-const hasAdminRights = async (request: Request, response: Response, next: NextFunction) => {
+async function hasAdminRights
+(request: Request, response: Response, next: NextFunction) {
     authorize(request, response, next, "admin");
 }
 
-const authorize = async (
+async function authorize(
         request: Request,
         response: Response,
         next: NextFunction,
         type: string
-    ) => {
+    ) {
 
     const { authorization } = request.headers;
 
@@ -29,7 +31,7 @@ const authorize = async (
 
     if (!scheme || !regex.test(scheme))
         failed(response, 401, "Bad Token Format");
-    JWT.verify(token!, jwt_secret, async (error: unknown, decoded: any) => {
+    JWT.verify(token!, JWT_SECRET, async (error: unknown, decoded: any) => {
         if (error) return failed(response, 401, "Invalid Token");
 
         const user = await service.read(decoded.sub) as IUser | undefined;
@@ -51,14 +53,24 @@ const authorize = async (
 }
 
 function userExists(user: any): user is IUser {
-    return (user && user._id !== undefined);
+    return (user && user?._id !== undefined);
 }
 
-const isAdmin = (user: any) => ["admin"].includes(user.accessLevel);
-const isBanned = (user: any) => ["banned"].includes(user.accessLevel);
-const isModerator = (user: any) => ["moderator"].includes(user.accessLevel);
-const matchIDs = (user: any, request: Request) =>
-    user._id.toString() === request.params.id;
+function isAdmin(user: IUser) {
+    return ["admin"].includes(user.accessLevel)
+}
+
+function isBanned(user: IUser) {
+    return ["banned"].includes(user.accessLevel)
+}
+
+function isModerator(user: IUser) {
+    return ["moderator"].includes(user.accessLevel)
+}
+
+function matchIDs(user: IUser, request: Request) {
+    return user._id.toString() === request.params.id;
+}
 
 export {
     isSelfOrAdmin,

@@ -1,32 +1,54 @@
-import dotenv from "dotenv";
+import { connectToLocalDB } from "../database/database.local";
+import { connectToProdDB } from "../database/database.prod";
+import { connectToDevDB } from "../database/database.dev";
 import { log } from "../utils/misc";
 
-export default async () => {
-    /* This imports and checks environment variables */
-    dotenv.config();
+async function loadEnviron() {
+    const ENVIRON = process.env.NODE_ENV;
+    switch (ENVIRON) {
+        case "dev":
+        case "prod":
+            process.loadEnvFile(`../../.env.${ENVIRON}`);
+            break;
+        default:
+            process.loadEnvFile("../../.env.default");
+            break;
+    }
+    checkVariables();
+}
+
+async function checkVariables() {
     const REQUIRED_ENV_VARIABLES = [
-        "NODE_ENV",
-        "DB_DEV",
-        "DB_PROD",
+        "DB_URI",
         "PORT",
         "SALT_ROUNDS",
         "JWT_SECRET",
         "BASE_ADDRESS",
     ];
 
-    for (let variable of REQUIRED_ENV_VARIABLES) {
-        if (!(variable in process.env)){
-            const message = `Missing environment variable: ${variable}.`;
-            log(message);
-            throw new Error(message);
-        }
+    const missing: string[] = [];
+    for (const VARIABLE of REQUIRED_ENV_VARIABLES) {
+        if (VARIABLE in process.env) continue;
+        missing.push(`${VARIABLE}`);
+    }
+
+    if (missing.length === 0) return;
+
+    const message = `Missing environment variable(s): ${missing.join(", ")}`;
+    log(message);
+    throw new Error(message);
+}
+
+async function startDatabase() {
+    const ENVIRON = process.env.NODE_ENV;
+    switch (ENVIRON) {
+        case "dev": return connectToDevDB();
+        case "prod": return connectToProdDB();
+        default: return connectToLocalDB();
     }
 }
 
-const environment: string   = `${process.env.NODE_ENV}`;
-const jwt_secret: string    = `${process.env.JWT_SECRET}`;
-const port: string          = `${process.env.PORT}`;
-const salt_rounds: string   = `${process.env.SALT_ROUNDS}`;
-const base_address: string  = `${process.env.BASE_ADDRESS}`;
-
-export { environment, jwt_secret, port, salt_rounds, base_address };
+export {
+    loadEnviron,
+    startDatabase,
+};
