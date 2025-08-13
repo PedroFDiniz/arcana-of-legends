@@ -1,30 +1,33 @@
 import bcrypt from "bcrypt";
-import { salt_rounds } from "../config/config";
+import { Response } from "express";
 
-const encrypt = async (word: string) => {
-    return await bcrypt.hash(word, parseInt(salt_rounds));
+const SALT_ROUNDS = process.env.SALT_ROUNDS!;
+const WHITESPACE_PATTERN = /\s+g/;
+
+async function encrypt(word: string) {
+    return await bcrypt.hash(word, parseInt(SALT_ROUNDS));
 }
 
-const compareEncrypted = async (word: string, encrypted: string) => {
+async function compareEncrypted(word: string, encrypted: string) {
     return await bcrypt.compare(word, encrypted);
 }
 
-const log = (message: string) => {
+function log(message: string): void {
     if (!message) return;
     console.log(`[${(new Date()).toLocaleString('en-US')}]: ${message}`);
 }
 
-const failed = (response: any, status: number, message: string) => {
+function failed(response: Response, status: number, message: string) {
     log(`Error ${status}: ${message}`);
     return response
         .status(status).send({ message: message });
 }
 
-const succeeded = (
-    response: any,
+function succeeded(
+    response: Response,
     status: number,
     message: string,
-    result: any = undefined) => {
+    result: any = undefined): Response {
         log(message);
         if (!result) return response
             .status(status).send({ message: message });
@@ -32,4 +35,15 @@ const succeeded = (
             .status(status).send({ message: message, result: result });
 }
 
-export { log, encrypt, compareEncrypted, failed, succeeded };
+const filterWhitespace = (sentence: string) => {
+    return sentence.replace(WHITESPACE_PATTERN, " ").trim().split(" ");
+};
+
+export {
+    compareEncrypted,
+    encrypt,
+    failed,
+    log,
+    succeeded,
+    filterWhitespace,
+};

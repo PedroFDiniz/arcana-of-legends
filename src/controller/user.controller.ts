@@ -1,8 +1,9 @@
+import { Request, Response } from "express";
 import service from "../service/user.service";
 import emailService from "../service/email.service";
 import { log, failed, succeeded } from "../utils/misc";
 
-const confirmEmail = async (request: any, response: any) => {
+async function confirmEmail(request: Request, response: Response): Promise<any> {
     const { key } = request.params;
 
     try {
@@ -17,7 +18,7 @@ const confirmEmail = async (request: any, response: any) => {
     }
 };
 
-const create = async (request: any, response: any) => {
+async function create(request: Request, response: Response): Promise<any> {
     const { email, password } = request.body;
     log(`Request to create user ${email}.`);
 
@@ -31,14 +32,14 @@ const create = async (request: any, response: any) => {
             id: user._id,
             email: user.email,
         };
-        emailService.confirmEmail(user.email, user._id.toString());
+        emailService.sendConfirmation(user.email, user._id.toString());
         return succeeded(response, 200, `User ${user.email} created`, data);
     } catch(error: any) {
         return failed(response, 400, error.message);
     }
 };
 
-const read = async (request: any, response: any) => {
+async function read(request: Request, response: Response): Promise<any> {
     const { id } = request.body;
 
     try {
@@ -50,7 +51,7 @@ const read = async (request: any, response: any) => {
     }
 };
 
-const readAll = async (request: any, response: any) => {
+async function readAll(request: Request, response: Response): Promise<any> {
     try {
         const users = await service.readAll();
         return succeeded(response, 200, `${users.length} user(s) read.`);
@@ -59,7 +60,7 @@ const readAll = async (request: any, response: any) => {
     }
 };
 
-const update = async (request: any, response: any) => {
+async function update(request: Request, response: Response): Promise<any> {
     const { id } = request.params;
     const { email, password } = request.body;
 
@@ -72,7 +73,7 @@ const update = async (request: any, response: any) => {
     }
 };
 
-const destroy = async (request: any, response: any) => {
+async function destroy(request: Request, response: Response): Promise<any> {
     const { id } = request.params;
     try {
         const result = await service.destroy(id);
@@ -83,7 +84,7 @@ const destroy = async (request: any, response: any) => {
     }
 };
 
-const destroyMany = async (request: any, response: any) => {
+async function destroyMany(request: Request, response: Response): Promise<any> {
     const { emails } = request.body;
     try {
         const result = await service.destroyMany(emails);
@@ -93,5 +94,12 @@ const destroyMany = async (request: any, response: any) => {
     }
 };
 
-
-export { confirmEmail, create, read, readAll, update, destroy, destroyMany }
+export {
+    confirmEmail,
+    create,
+    read,
+    readAll,
+    update,
+    destroy,
+    destroyMany
+};

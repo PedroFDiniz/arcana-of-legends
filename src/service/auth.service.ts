@@ -1,15 +1,15 @@
 import JWT from "jsonwebtoken";
-import { jwt_secret } from "../config/config";
 import { compareEncrypted as compare } from "../utils/misc";
 import service from "./user.service";
+const JWT_SECRET = process.env.JWT_SECRET!;
 const EMAIL_OR_PWD = "Incorrect email or password";
 
-const signToken = async (id: any) => {
+async function signToken(id: any) {
     return JWT.sign({
-        iss: "explora-server",
+        iss: "arcana-of-legends",
         sub: id,
         iat: new Date().getTime(),
-    }, jwt_secret);
+    }, JWT_SECRET);
 };
 
 const signIn = async (email: string, password: string) => {
@@ -20,13 +20,16 @@ const signIn = async (email: string, password: string) => {
     if (!match) throw new Error(EMAIL_OR_PWD);
 
     const token = await signToken(user._id);
-    return {
-        "user": {
-            id: user._id,
-            email: user.email,
+    const result = {
+        user: {
+            _id: user._id,
+            email: user.email
         },
-        "token": token,
-    };
+        token: token,
+    }
+    return result;
 }
 
-export default { signIn };
+export default {
+    signIn,
+};

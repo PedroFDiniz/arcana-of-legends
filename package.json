@@ -1,35 +1,43 @@
 {
   "name": "just-another-rpg-game",
-  "version": "0.0.4",
+  "version": "0.2.0",
   "description": "A backend server supporting an online RPG game",
   "main": "index.js",
   "scripts": {
     "start": "set NODE_ENV=dev && npx tsc && node ./dist/index.js",
-    "deploy:build": "npx tsc",
+    "start:linux": "NODE_ENV=dev && npx tsc && node ./dist/index.js",
+    "deploy:build": "npm i . && npx tsc",
     "deploy:run": "node ./dist/index.js"
   },
   "author": "Pedro Falcão",
   "license": "ISC",
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
-    "@types/body-parser": "^1.19.5",
-    "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.1",
-    "@types/jsonwebtoken": "^9.0.9",
-    "@types/node": "^22.13.13",
-    "@types/nodemailer": "^6.4.17",
-    "bcrypt": "^5.1.1",
-    "body-parser": "^2.1.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.7",
-    "express": "^5.0.1",
-    "jsonwebtoken": "^9.0.2",
-    "mongodb-memory-server": "^10.1.4",
-    "mongoose": "^8.13",
-    "nodemailer": "^6.10.0",
-    "typescript": "^5.8.2"
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "husky": "^9.1.7"
   },
   "dependencies": {
-    "just-another-rpg-game": "file:"
+    "@types/bcrypt": "^6.0.0",
+    "@types/body-parser": "1.19.6",
+    "@types/cors": "2.8.19",
+    "@types/express": "5.0.3",
+    "@types/jsonwebtoken": "9.0.10",
+    "@types/node": "24.2.1",
+    "@types/nodemailer": "^6.4.17",
+    "bcrypt": "6.0.0",
+    "body-parser": "2.2.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "just-another-rpg-game": "file:",
+    "mongodb-memory-server": "10.2.0",
+    "mongoose": "8.17.1",
+    "nodemailer": "^7.0.5",
+    "typescript": "5.9.2"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E  HUSKY_GIT_PARAMS"
+    }
   }
 }
