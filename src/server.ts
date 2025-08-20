@@ -1,7 +1,7 @@
 import cors from "cors";
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
-import emailRoutes from "./routes/email.routes";
+// import emailRoutes from "./routes/email.routes";
 import express, { Request } from "express";
 import bodyParser from "body-parser";
 
@@ -14,7 +14,7 @@ server.use(cors());
 /* Routes */
 server.use(authRoutes);
 server.use(userRoutes);
-server.use(emailRoutes);
+// server.use(emailRoutes);
 
 server.use(bodyParser.urlencoded({ extended: false }));
 server.use(bodyParser.json());
