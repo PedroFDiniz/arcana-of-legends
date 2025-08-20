@@ -5,20 +5,26 @@ import { NextFunction, Request, Response } from "express";
 import { IUser } from "../model/user";
 const JWT_SECRET = process.env.JWT_SECRET!;
 
+enum AuthType {
+    IS_ADMIN,
+    IS_ADMIN_OR_SELF,
+}
+
 async function isSelfOrAdmin
 (request: Request, response: Response, next: NextFunction) {
-    authorize(request, response, next, "authorized");
+    authorize(request, response, next, AuthType.IS_ADMIN_OR_SELF);
 }
+
 async function hasAdminRights
 (request: Request, response: Response, next: NextFunction) {
-    authorize(request, response, next, "admin");
+    authorize(request, response, next, AuthType.IS_ADMIN);
 }
 
 async function authorize(
         request: Request,
         response: Response,
         next: NextFunction,
-        type: string
+        type: AuthType
     ) {
 
     const { authorization } = request.headers;
@@ -40,11 +46,11 @@ async function authorize(
         response.locals.authenticated = user._id;
         if (isBanned(user)) return failed(response, 400, "User is banned");
         switch (type) {
-            case "admin":
+            case AuthType.IS_ADMIN:
                 if (!isAdmin(user))
                     return failed(response, 403, "Unauthorized user");
                 break;
-            case "authorized":
+            case AuthType.IS_ADMIN_OR_SELF:
                 if (!isAdmin(user) && !matchIDs(user, request))
                     return failed(response, 403, "Unauthorized user");
                 break;
@@ -65,7 +71,7 @@ function isBanned(user: IUser) {
 }
 
 function isModerator(user: IUser) {
-    return ["moderator"].includes(user.accessLevel)
+    return ["moderator", "admin"].includes(user.accessLevel)
 }
 
 function matchIDs(user: IUser, request: Request) {
