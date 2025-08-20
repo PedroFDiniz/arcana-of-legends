@@ -8,10 +8,10 @@ async function loadEnviron() {
     switch (ENVIRON) {
         case "dev":
         case "prod":
-            process.loadEnvFile(`../../.env.${ENVIRON}`);
+            process.loadEnvFile(`./.env.${ENVIRON}`);
             break;
         default:
-            process.loadEnvFile("../../.env.default");
+            process.loadEnvFile("./.env.default");
             break;
     }
     checkVariables();
