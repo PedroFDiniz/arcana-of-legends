@@ -8,7 +8,7 @@ interface IUser {
     email: string;
     password: string;
     accessLevel: string;
-    confirmationCode: number;
+    confirmationCode: string;
     emailConfirmed: boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -42,7 +42,7 @@ const userSchema = new Schema<IUser>({
         default: "player",
     },
     confirmationCode: {
-        type: Number,
+        type: String,
         required: true,
     },
     emailConfirmed: {
