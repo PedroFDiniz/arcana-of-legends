@@ -4,7 +4,6 @@ import { log, failed, succeeded } from "../utils/misc";
 import { IUser } from "../model/user";
 import { DeleteResult } from "mongoose";
 
-
 async function create(request: Request, response: Response): Promise<any> {
     const { username, email, password } = request.body;
     log(`Request to create user ${username}.`);
@@ -17,8 +16,14 @@ async function create(request: Request, response: Response): Promise<any> {
 
     try {
         const user: IUser = await service.create(userProperties);
+        let result = {
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            createdAt: (new Date(user.createdAt)).toLocaleString(),
+        };
 
-        return succeeded(response, 200, `User ${user.email} created`, user);
+        return succeeded(response, 200, `User ${user.email} created`, result);
     } catch(error: unknown) {
         if (error instanceof Error)
             return failed(response, 400, `${error.stack}`);
