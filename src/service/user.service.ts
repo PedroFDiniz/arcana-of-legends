@@ -7,19 +7,19 @@ const LANGUAGE = "pt-BR";
 
 type usernameOrEmail = string;
 
-export type userCreateProps = {
+export type UserCreateProps = {
     username: string;
     email: string;
     password: string;
 };
 
-export type userUpdateProps = {
+export type UserUpdateProps = {
     username?: string;
     email?: string;
     password?: string;
 };
 
-async function create(properties: userCreateProps): Promise<IUser> {
+async function create(properties: UserCreateProps): Promise<IUser> {
     const newUser = new Users({
         username: properties.username,
         email: properties.email,
@@ -87,7 +87,7 @@ async function readByEmail(email: string): Promise<IUser | null> {
 }
 
 async function update
-(id: string, properties: userUpdateProps): Promise<IUser | null> {
+(id: string, properties: UserUpdateProps): Promise<IUser | null> {
     const user = Users.findOne({ _id: id })
     user.select("_id username email password");
     if (properties.username) user.set("username", properties.username);

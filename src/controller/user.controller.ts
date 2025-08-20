@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import service, { userCreateProps, userUpdateProps } from "../service/user.service";
+import service, { UserCreateProps, UserUpdateProps } from "../service/user.service";
 import { log, failed, succeeded } from "../utils/misc";
 import { IUser } from "../model/user";
 import { DeleteResult } from "mongoose";
@@ -9,7 +9,7 @@ async function create(request: Request, response: Response): Promise<any> {
     const { username, email, password } = request.body;
     log(`Request to create user ${username}.`);
 
-    const userProperties: userCreateProps = {
+    const userProperties: UserCreateProps = {
         username,
         email,
         password,
@@ -58,7 +58,7 @@ async function update(request: Request, response: Response): Promise<any> {
     if (!await service.exists(id))
         return failed(response, 404, `User ${id} not found`);
 
-    const properties: userUpdateProps = { };
+    const properties: UserUpdateProps = { };
     if (username) properties.username = username;
     if (email) properties.email = email;
     if (password) properties.password = password;
