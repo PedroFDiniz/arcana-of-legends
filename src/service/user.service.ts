@@ -1,5 +1,6 @@
 import { DeleteResult } from "mongoose";
 import Users, { IUser } from "../model/user";
+import { createConfirmationCode } from "../utils/misc";
 
 const USER_STANDARD_PROPS = "_id username email accessLevel";
 const USER_LOGIN_PROPS = "_id username email password accessLevel";
@@ -24,7 +25,8 @@ async function create(properties: UserCreateProps): Promise<IUser> {
         username: properties.username,
         email: properties.email,
         password: properties.password,
-        createdAt: new Date().toLocaleString(LANGUAGE),
+        confirmationCode: createConfirmationCode(),
+        createdAt: new Date(),
     });
     return newUser.save();
 }
