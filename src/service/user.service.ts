@@ -1,39 +1,36 @@
 import { DeleteResult } from "mongoose";
-import Users, { IUser } from "../model/user";
+import Users, { IUser, IUserDraft } from "../model/user";
 import { createConfirmationCode } from "../utils/misc";
+import { log } from "../utils/misc";
 
 const USER_STANDARD_PROPS = "_id username email accessLevel";
-const USER_LOGIN_PROPS = "_id username email password accessLevel";
+const USER_LOGIN_PROPS = "_id email password";
 const LANGUAGE = "pt-BR";
 
-type usernameOrEmail = string;
+type userOrEmail = string;
+type CharacterSearchResult = IUserDraft | null;
 
-export type UserCreateProps = {
+export interface UserCreateProps {
     username: string;
     email: string;
     password: string;
 };
 
-export type UserUpdateProps = {
-    username?: string;
-    email?: string;
-    password?: string;
-};
+export interface UserUpdateProps extends Partial<UserCreateProps> { };
 
 async function create(properties: UserCreateProps): Promise<IUser> {
-    const newUser = new Users({
+    const newUser = await Users.create({
         username: properties.username,
         email: properties.email,
         password: properties.password,
         confirmationCode: createConfirmationCode(),
-        createdAt: new Date(),
     });
-    return newUser.save();
+    return newUser;
 }
 
 async function destroy(id: string): Promise<DeleteResult> {
     const user = Users.findById(id);
-    return user.deleteOne().exec();
+    return await user.deleteOne().exec();
 }
 
 async function destroyMany(emails: string[]): Promise<DeleteResult> {
@@ -42,7 +39,7 @@ async function destroyMany(emails: string[]): Promise<DeleteResult> {
             $in: emails,
         },
     });
-    return users.deleteMany().exec();
+    return await users.deleteMany().exec();
 }
 
 async function exists(id: string): Promise<boolean> {
@@ -51,24 +48,22 @@ async function exists(id: string): Promise<boolean> {
 }
 
 async function has(email: string): Promise<boolean> {
-    const exists = Users.exists({ email });
-    const result = (!!exists.exec());
-    return result;
+    const exists = await Users.exists({ email });
+    return (!!exists);
 }
 
 async function getLoginInfo
-(credentials: usernameOrEmail, password: string): Promise<IUser | null> {
-    const user = Users.findOne({
+(credentials: userOrEmail): Promise<CharacterSearchResult> {
+    const user = await Users.findOne({
         $or: [
-            { username: credentials },
-            { email: credentials },
-        ],
-    });
-    user.select(USER_LOGIN_PROPS);
-    return user.exec();
+            { email: credentials.toLowerCase() },
+            { username: credentials.toLowerCase() },
+        ]
+    }, USER_LOGIN_PROPS, {});
+    return user;
 }
 
-async function read(id: string): Promise<IUser | null> {
+async function read(id: string): Promise<CharacterSearchResult> {
     const user = Users.findOne({ _id: id });
     user.select(USER_STANDARD_PROPS);
     return user.exec();
@@ -80,7 +75,7 @@ async function readAll(): Promise<IUser[]> {
     return users.exec();
 }
 
-async function readByEmail(email: string): Promise<IUser | null> {
+async function readByEmail(email: string): Promise<CharacterSearchResult> {
     const user = Users.findOne({
         email
     });
@@ -89,7 +84,7 @@ async function readByEmail(email: string): Promise<IUser | null> {
 }
 
 async function update
-(id: string, properties: UserUpdateProps): Promise<IUser | null> {
+(id: string, properties: UserUpdateProps): Promise<CharacterSearchResult> {
     const user = Users.findOne({ _id: id })
     user.select("_id username email password");
     if (properties.username) user.set("username", properties.username);
@@ -103,6 +98,7 @@ export default {
     destroy,
     destroyMany,
     exists,
+    getLoginInfo,
     has,
     read,
     readAll,

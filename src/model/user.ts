@@ -14,6 +14,8 @@ interface IUser {
     updatedAt: Date;
 }
 
+interface IUserDraft extends Partial<IUser> { };
+
 const userSchema = new Schema<IUser>({
     username: {
         type: String,
@@ -49,14 +51,7 @@ const userSchema = new Schema<IUser>({
         type: Boolean,
         default: false,
     },
-    createdAt: {
-        type: Date,
-        required: true,
-    },
-    updatedAt: {
-        type: Date,
-    },
-});
+}, { timestamps: true });
 
 export default model("User", userSchema, "users");
-export { IUser };
+export { IUser, IUserDraft };

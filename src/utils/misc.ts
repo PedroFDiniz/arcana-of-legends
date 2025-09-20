@@ -19,13 +19,13 @@ function log(message: string): void {
     console.log(`[${(new Date()).toLocaleString('en-US')}]: ${message}`);
 }
 
-function failed(response: Response, status: number, message: string) {
+function fail(response: Response, status: number, message: string) {
     log(`Error ${status}: ${message}`);
     return response
         .status(status).send({ message: message });
 }
 
-function succeeded(
+function succeed(
     response: Response,
     status: number,
     message: string,
@@ -62,8 +62,8 @@ export {
     compareEncrypted,
     createConfirmationCode,
     encrypt,
-    failed,
+    fail,
     log,
-    succeeded,
+    succeed,
     filterWhitespace,
 };

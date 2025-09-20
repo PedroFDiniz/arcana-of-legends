@@ -17,6 +17,8 @@ interface ICharacter {
     updatedAt: Date;
 }
 
+interface ICharacterDraft extends Partial<ICharacter> { };
+
 const dynStatSchema = new Schema({
     current: {
         type: Number,
@@ -54,10 +56,7 @@ const charSchema = new Schema<ICharacter>({
         type: dynStatSchema,
         required: true,
     },
-    createdAt: {
-
-    }
-});
+}, { timestamps: true });
 
 export default model("Character", charSchema, "characters");
-export { ICharacter };
+export { ICharacter, ICharacterDraft };
