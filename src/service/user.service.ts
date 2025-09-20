@@ -1,7 +1,6 @@
 import { DeleteResult } from "mongoose";
 import Users, { IUser, IUserDraft } from "../model/user";
 import { createConfirmationCode } from "../utils/misc";
-import { log } from "../utils/misc";
 
 const USER_STANDARD_PROPS = "_id username email accessLevel";
 const USER_LOGIN_PROPS = "_id email password";
